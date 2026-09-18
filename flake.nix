@@ -13,30 +13,32 @@
         "aarch64-linux"
       ];
 
-      perSystem = { pkgs, ... }: {
-        packages.default = pkgs.stdenvNoCC.mkDerivation {
-          pname = "space-isolation";
-          version = "unstable";
+      perSystem = { pkgs, ... }:
+        let
+          mkTheme = resolution: pkgs.stdenvNoCC.mkDerivation {
+            pname = "space-isolation-${resolution}";
+            version = "unstable";
 
-          src = ./.;
+            src = ./.;
 
-          installPhase = ''
-            mkdir -p $out/share/grub/themes/space-isolation
+            installPhase = ''
+              mkdir -p $out/share/grub/themes/space-isolation
+              cp -r ${resolution}/* $out/share/grub/themes/space-isolation/
+            '';
 
-            cp -r \
-              1920x1080 \
-              1920x1200 \
-              2560x1440 \
-              $out/share/grub/themes/space-isolation/
-          '';
-
-          meta = {
-            description = "GRUB theme based on Alien: Isolation";
-            homepage = "https://github.com/xfeusw/space-isolation";
-            license = pkgs.lib.licenses.mit;
-            platforms = pkgs.lib.platforms.linux;
+            meta = {
+              description = "Space Isolation GRUB theme for ${resolution}";
+              homepage = "https://github.com/xfeusw/space-isolation";
+              license = pkgs.lib.licenses.mit;
+              platforms = pkgs.lib.platforms.linux;
+            };
+          };
+        in {
+          packages = {
+            theme-1920x1080 = mkTheme "1920x1080";
+            theme-1920x1200 = mkTheme "1920x1200";
+            theme-2560x1440 = mkTheme "2560x1440";
           };
         };
-      };
     };
 }
