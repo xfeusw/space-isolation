@@ -37,8 +37,8 @@
               src = ./.;
 
               installPhase = ''
-                mkdir -p $out/share/grub/themes/space-isolation
-                cp -r ${resolution}/* $out/share/grub/themes/space-isolation/
+                mkdir -p $out
+                cp -r ${resolution}/* $out/
               '';
 
               meta = {
